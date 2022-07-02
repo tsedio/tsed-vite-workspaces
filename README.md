@@ -14,10 +14,7 @@ Edit `package.json` and add:
 
 ```json
 {
-  "workspaces": [
-    "packages/*",
-    "packages/**/*"
-  ]
+  "workspaces": ["packages/*", "packages/**/*"]
 }
 ```
 
@@ -107,7 +104,7 @@ module.exports = {
 };
 ```
 
-Then create `.eslintrc.js` for each packages  in `packages/config`.
+Then create `.eslintrc.js` for each packages in `packages/config`.
 
 Add the following configuration if the packages is for a `node.js` env:
 
@@ -153,6 +150,17 @@ Finally, add the followings scripts in the root `package.json`:
 yarn add -D lint-staged
 ```
 
+Edit root `package.json` and add the following configuration:
+
+```json
+{
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": ["yarn lint:fix", "git add"],
+    "**/*.{json,md,yml,yaml}": ["prettier --write"]
+  }
+}
+```
+
 ## Commit lint
 
 ```shell
@@ -178,8 +186,6 @@ Edit `package.json` and replace "postinstall" step by:
 +    "prepare": "is-ci || husky install",
 }
 ```
-
-
 
 ## Jest & testing-library
 

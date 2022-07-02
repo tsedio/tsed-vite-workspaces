@@ -7,7 +7,7 @@
     "prepare": "is-ci || husky install",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "nx run-many --target=lint --all",
-    "lint:1": "nx run @project/components:lint"
+    "prettier": "prettier --write \"**/*.{md,yml,json}\""
   },
   "dependencies": {
     "is-ci": "^3.0.1",
@@ -33,20 +33,12 @@
     "packages/**/*"
   ],
   "lint-staged": {
-    "packages/dataviz/**/*.{ts,tsx,js,jsx}": [
-      "cd packages/dataviz && yarn lint:fix",
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
       "git add"
     ],
-    "packages/components/**/*.{ts,tsx,js,jsx}": [
-      "cd packages/components && yarn lint:fix",
-      "git add"
-    ],
-    "packages/utils/**/*.{ts,tsx,js,jsx}": [
-      "cd packages/utils && yarn lint:fix",
-      "git add"
-    ],
-    "packages/server/**/*.{ts}": [
-      "cd packages/server && yarn lint:fix",
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write",
       "git add"
     ]
   }

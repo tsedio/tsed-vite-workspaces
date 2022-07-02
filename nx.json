@@ -4,21 +4,14 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "lint",
-          "lint:fix",
-          "build",
-          "preview"
-        ],
+        "cacheableOperations": ["lint", "lint:fix", "build", "preview"],
         "accessToken": "NjMxZmVlMjMtMGJhZS00YzAwLWEzNTItNDQzYTQ4YzJhMWQyfHJlYWQtd3JpdGU="
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     }
   },
   "affected": {
