@@ -25,26 +25,19 @@ describe("Button Component", () => {
       "hover:border-blue-active",
       "hover:text-white-active"
     );
-    expect(screen.getByTestId("button-wrapper")).toHaveClass(
-      "font-bold",
-      "px-4",
-      "py-1"
-    );
+    expect(screen.getByTestId("button-wrapper")).toHaveClass("font-bold", "px-4", "py-1");
   });
 
   test("it should render a custom  given tag with default tag and label", () => {
     render(
-      <Router history={history}>
+      <Router navigator={history} location={history.location}>
         <Button component={Link} to='/path/to/hell'>
           Label
         </Button>
       </Router>
     );
     expect(screen.queryByRole("button")).toBeNull();
-    expect(screen.getByRole("link", { name: "Label" })).toHaveAttribute(
-      "href",
-      "/path/to/hell"
-    );
+    expect(screen.getByRole("link", { name: "Label" })).toHaveAttribute("href", "/path/to/hell");
   });
 
   test("it should render a disabled component", () => {
@@ -65,14 +58,7 @@ describe("Button Component", () => {
 
   test("it should render button with customer color", () => {
     render(
-      <Button
-        bgColor='red'
-        borderColor='yellow'
-        color='black'
-        fontWeight='lighter'
-        paddingX={2}
-        paddingY={3}
-      >
+      <Button bgColor='red' borderColor='yellow' color='black' fontWeight='lighter' paddingX={2} paddingY={3}>
         Label
       </Button>
     );
@@ -87,10 +73,6 @@ describe("Button Component", () => {
       "hover:border-yellow-active",
       "hover:text-black-active"
     );
-    expect(screen.getByTestId("button-wrapper")).toHaveClass(
-      "font-lighter",
-      "px-2",
-      "py-3"
-    );
+    expect(screen.getByTestId("button-wrapper")).toHaveClass("font-lighter", "px-2", "py-3");
   });
 });

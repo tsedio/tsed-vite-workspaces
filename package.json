@@ -7,9 +7,11 @@
     "prepare": "is-ci || husky install",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "nx run-many --target=lint --all",
+    "test": "nx run-many --target=test --all",
     "prettier": "prettier --write \"**/*.{md,yml,json}\""
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "is-ci": "^3.0.1",
     "nx": "^14.4.0"
   },
@@ -17,6 +19,8 @@
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
     "@nrwl/nx-cloud": "^14.2.0",
+    "@swc/core": "^1.2.208",
+    "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.14.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -25,8 +29,9 @@
     "eslint": "^8.19.0",
     "husky": "^8.0.0",
     "jest": "^28.1.2",
+    "jest-environment-jsdom": "^28.1.2",
+    "jest-watch-typeahead": "^1.1.0",
     "lint-staged": "^13.0.3",
-    "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "workspaces": [

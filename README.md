@@ -1,11 +1,50 @@
-# tsed-vite-workspaces
+<p style="text-align: center" align="center">
+ <a href="https://tsed.io" target="_blank"><img src="https://tsed.io/tsed-og.png" width="200" alt="Ts.ED logo"/></a>
+</p>
+
+<div align="center">
+  <h1>Ts.ED + Vite + Nx + Mono repo</h1>
+
+[![PR Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tsedio/tsed-cli/blob/master/CONTRIBUTING.md)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![backers](https://opencollective.com/tsed/tiers/badge.svg)](https://opencollective.com/tsed)
+
+  <br />
+<div align="center">
+  <a href="https://tsed.io/">Website</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://tsed.io/getting-started.html">Getting started</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://api.tsed.io/rest/slack/tsedio/tsed">Slack</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://twitter.com/TsED_io">Twitter</a>
+</div>
+  <hr />
+</div>
+
+## Introduction
+
+This repository show you how to create mono repository with Ts.ED and Vite/React.
+
+## Features
+
+- Node.js 16+
+- TypeScript
+- Ts.ED
+- React
+- Vite
+- Nx and Yarn 3 workspaces
+- Jest 28+
+- Eslint
+- Lint-staged
+- Husky
 
 ### Step
 
 ```sh
 corepack enable
 yarn init -2
-yarn plugin import workspace-tools
 ```
 
 Add `nodeLinker: node-modules` in `.yarnrc.yml`.
@@ -14,7 +53,10 @@ Edit `package.json` and add:
 
 ```json
 {
-  "workspaces": ["packages/*", "packages/**/*"]
+  "workspaces": [
+    "packages/*",
+    "packages/**/*"
+  ]
 }
 ```
 
@@ -37,88 +79,36 @@ npx add-nx-to-monorepo
 
 ```shell
 cd packages/config
-yarn add -D eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-workspaces eslint-config-prettier eslint-plugin-import eslint-plugin-simple-import-sort
-yarn add -D eslint-config-react-app eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-testing-library
-yarn add -D eslint-plugin-jsx-a11y
+yarn add -D eslint
+yarn workspace add -D eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-workspaces eslint-config-prettier eslint-plugin-import eslint-plugin-simple-import-sort
+yarn workspace add -D eslint-config-react-app eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-testing-library
+yarn workspace add -D eslint-plugin-jsx-a11y
 ```
 
-Create a `packages/config/eslint/node.js` with this initiale configuration:
+In `packages/config/eslint`:
 
-```js
-module.exports = {
-  parser: "@typescript-eslint/parser",
-  extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
-  plugins: ["workspaces", "simple-import-sort"],
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: "module"
-  },
-  env: {
-    node: true,
-    es6: true
-  },
-  rules: {
-    "@typescript-eslint/ban-ts-comment": 0,
-    "@typescript-eslint/camelcase": 0,
-    "@typescript-eslint/no-inferrable-types": 0,
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-    "@typescript-eslint/no-unused-vars": 0,
-    "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-non-null-assertion": 0,
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
-    "workspaces/no-absolute-imports": "error"
-  },
-  overrides: [
-    {
-      files: ["**/*.spec.ts", "**/test/**", "**/__mock__/**"],
-      rules: {
-        "workspaces/no-absolute-imports": 0
-      }
-    },
-    {
-      files: ["**/*.js"],
-      rules: {
-        "@typescript-eslint/no-var-requires": 0
-      }
-    }
-  ]
-};
-```
-
-Create a `packages/config/eslint/web.js` with this initiale configuration:
-
-```js
-module.exports = {
-  extends: ["react-app", "react-app/jest", "plugin:jsx-a11y/strict"],
-  plugins: ["prettier", "simple-import-sort"],
-  rules: {
-    "prettier/prettier": "error",
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error"
-  }
-};
-```
+- Create a [`packages/config/eslint/node.js`](./packages/config/eslint/node.js) file,
+- Create a [`packages/config/eslint/web.js`](./packages/config/eslint/web.js) file.
 
 Then create `.eslintrc.js` for each packages in `packages/config`.
 
-Add the following configuration if the packages is for a `node.js` env:
+### Web
 
-```js
-module.exports = {
-  extends: [require.resolve("@project/config/eslint/node")]
-};
-```
-
-Add the following configuration if the packages is for a `web` env:
+Add the following configuration if the packages is for a `web` (front) env:
 
 ```js
 module.exports = {
   extends: [require.resolve("@project/config/eslint/web")]
+};
+```
+
+### Node
+
+Add the following configuration if the packages is for a `node.js` (back) env:
+
+```js
+module.exports = {
+  extends: [require.resolve("@project/config/eslint/node")]
 };
 ```
 
@@ -133,7 +123,7 @@ Then, add for each `packages/**/*/package.json`:
 }
 ```
 
-Finally, add the followings scripts in the root `package.json`:
+Finally, add the following scripts in the root `package.json`:
 
 ```json
 {
@@ -155,8 +145,14 @@ Edit root `package.json` and add the following configuration:
 ```json
 {
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": ["yarn lint:fix", "git add"],
-    "**/*.{json,md,yml,yaml}": ["prettier --write"]
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
 ```
@@ -190,5 +186,42 @@ Edit `package.json` and replace "postinstall" step by:
 ## Jest & testing-library
 
 ```shell
-yarn add -D jest ts-jest @types/jest @testing-library/dom @testing-library/jest-dom @testing-library/react @testing-library/user-event
+yarn add -D cross-env jest jest-environment-jsdom jest-watch-typeahead @swc/core @swc/jest @types/jest @testing-library/dom @testing-library/jest-dom @testing-library/react @testing-library/user-event
+yarn workspace @project/config add -D camelcase 
+```
+
+### Web
+
+In `packages/config/jest`, create the following files:
+
+- Create [`jest.web.config.js`](./packages/config/jest/jest.web.config.js),
+- Create [`cssTransform.js`](./packages/config/jest/cssTransform.js),
+- Create [`fileTransform.js`](./packages/config/jest/fileTransform.js),
+- Create [`setupTest.js`](./packages/config/jest/setupTest.js),
+- Create [`swc.json`](./packages/config/jest/swc.json).
+
+In `packages/web/app` and `packages/web/components`, create a `jest.config.js` with the following code:
+
+```js
+module.exports = require("@project/config/jest/jest.web.config.js");
+```
+
+Edit `packages/web/app/package.json` and `packages/web/components/package.json` and add the following scripts:
+
+```json
+{
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest --coverage"
+  }
+}
+```
+
+And finally, edit the root `package.json` and add the following scripts:
+
+```json
+{
+  "scripts": {
+    "test": "nx run-many --target=test --all"
+  }
+}
 ```

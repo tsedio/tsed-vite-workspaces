@@ -4,7 +4,8 @@
   "main": "src/index.ts",
   "scripts": {
     "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "test": "cross-env NODE_ENV=test jest --coverage"
   },
   "devDependencies": {
     "@project/config": "1.0.0",
