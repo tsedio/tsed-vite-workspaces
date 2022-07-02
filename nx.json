@@ -1,0 +1,27 @@
+{
+  "extends": "nx/presets/npm.json",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": [
+          "lint",
+          "lint:fix",
+          "build",
+          "preview"
+        ],
+        "accessToken": "NjMxZmVlMjMtMGJhZS00YzAwLWEzNTItNDQzYTQ4YzJhMWQyfHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  },
+  "affected": {
+    "defaultBase": "master"
+  }
+}

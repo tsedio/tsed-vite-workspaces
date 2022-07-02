@@ -1,0 +1,53 @@
+{
+  "name": "@project/root",
+  "packageManager": "yarn@3.2.1",
+  "private": true,
+  "scripts": {
+    "start:web:app": "nx start @project/app",
+    "prepare": "is-ci || husky install",
+    "lint": "nx run-many --target=lint --all",
+    "lint:fix": "nx run-many --target=lint --all",
+    "lint:1": "nx run @project/components:lint"
+  },
+  "dependencies": {
+    "is-ci": "^3.0.1",
+    "nx": "^14.4.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@nrwl/nx-cloud": "^14.2.0",
+    "@testing-library/dom": "^8.14.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.2.1",
+    "@types/jest": "^28.1.4",
+    "eslint": "^8.19.0",
+    "husky": "^8.0.0",
+    "jest": "^28.1.2",
+    "lint-staged": "^13.0.3",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
+  },
+  "workspaces": [
+    "packages/**/*"
+  ],
+  "lint-staged": {
+    "packages/dataviz/**/*.{ts,tsx,js,jsx}": [
+      "cd packages/dataviz && yarn lint:fix",
+      "git add"
+    ],
+    "packages/components/**/*.{ts,tsx,js,jsx}": [
+      "cd packages/components && yarn lint:fix",
+      "git add"
+    ],
+    "packages/utils/**/*.{ts,tsx,js,jsx}": [
+      "cd packages/utils && yarn lint:fix",
+      "git add"
+    ],
+    "packages/server/**/*.{ts}": [
+      "cd packages/server && yarn lint:fix",
+      "git add"
+    ]
+  }
+}
