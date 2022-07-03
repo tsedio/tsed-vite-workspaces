@@ -1,76 +1,60 @@
 import classnames from "classnames";
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 
-export interface ButtonProps
-  extends PropsWithChildren<any>,
-    Record<string, any> {
-  component?: any;
+export interface ButtonProps extends Record<string, any> {
+  component?: React.ComponentType<any> | string;
   borderColor?: string;
   bgColor?: string;
+  variant?: number | string;
   color?: string;
-  borderActive?: string;
-  bgActive?: string;
-  colorActive?: string;
   fontWeight?: string;
+  rounded?: string;
   paddingX?: number;
   paddingY?: number;
   disabled?: boolean;
-  rounded?: "none" | "xs" | "small" | "default" | "medium" | "half" | "full";
+  shadow?: string;
+  className?: string;
 }
 
-const Button = (props: ButtonProps) => {
-  let {
-    component: Component = "button",
-    children,
-    borderColor,
-    bgColor = "blue",
-    color = "white",
-    fontWeight = "bold",
-    rounded = "small",
-    paddingX = 4,
-    paddingY = 1,
-    disabled,
-    borderActive,
-    bgActive,
-    colorActive,
-    ...otherProps
-  } = props;
-
-  if (disabled) {
-    bgColor = "gray-light";
-    borderColor = "gray-light";
-    color = "white";
+export const Button = ({
+  component: Component = "button",
+  children,
+  borderColor,
+  bgColor = "primary",
+  variant = 800,
+  color = "white",
+  fontWeight = "bold",
+  rounded = "sm",
+  paddingX = 4,
+  paddingY = 1,
+  disabled,
+  shadow = "none",
+  className = "",
+  ...otherProps
+}: PropsWithChildren<ButtonProps>) => {
+  if (bgColor === "primary") {
+    variant = "active";
   }
 
   if (!borderColor) {
     borderColor = bgColor;
   }
 
-  const _borderActive = !borderActive ? `${borderColor}-active` : borderActive;
-  const _bgActive = !bgActive ? `${bgColor}-active` : bgActive;
-  const _colorActive = !colorActive ? `${color}-active` : colorActive;
-
-  const activeClass = `focus:bg-${_bgActive} focus:border-${_borderActive} focus:text-${_colorActive} hover:bg-${_bgActive} hover:border-${_borderActive} hover:text-${_colorActive}`;
-
-  const classNames = `reset-button group inline-flex flex-col items-stretch overflow-hidden text-base transition-colors
-  bg-${bgColor} border-${borderColor} text-${color} ${activeClass} cursor-pointer border-1 border-solid rounded-${rounded}`;
+  const classNames = `inline-flex flex-col items-stretch overflow-hidden text-base transition-colors
+  bg-${bgColor} border-${borderColor} text-${color} focus:bg-${bgColor}-${variant} focus:border-${borderColor}-${variant}
+  hover:bg-${bgColor}-${variant} hover:border-${borderColor}-${variant} focus:text-${color}-${variant} hover:text-${color}-${variant}
+  border-1 border-solid rounded-${rounded} shadow-${shadow} ${disabled ? "opacity-50" : "cursor-pointer"}`;
 
   return (
-    <Component
-      {...otherProps}
-      disabled={disabled}
-      className={classnames(classNames, (props as any).className)}
-    >
+    <Component {...otherProps} disabled={disabled} className={classnames(classNames, className)} data-testid={"button"}>
       <span
-        data-testid={"button-wrapper"}
-        className={`flex justify-center items-center h-full w-full font-${fontWeight} px-${paddingX} py-${paddingY}`}
+        data-testid={"buttonSpan"}
+        className={`reset-link flex justify-center items-center w-full font-${fontWeight} px-${paddingX} py-${paddingY}`}
       >
-        <span className='m-1 text-center flex justify-center items-center'>
+        <span data-testid={"buttonWrapper"} className="m-1 text-center flex justify-center items-center">
           {children}
         </span>
       </span>
     </Component>
   );
 };
-
-export { Button };

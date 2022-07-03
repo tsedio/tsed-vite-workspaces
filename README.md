@@ -33,10 +33,11 @@ This repository show you how to create mono repository with Ts.ED and Vite/React
 - TypeScript
 - Ts.ED
 - React
+- Tailwind 3
 - Vite
 - Nx and Yarn 3 workspaces
 - Jest 28+
-- Eslint
+- Eslint & Prettier
 - Lint-staged
 - Husky
 
@@ -61,13 +62,20 @@ Edit `package.json` and add:
 ```
 
 ```sh
-mkdir packages/web/app && cd packages/web/app && yarn init -y
 mkdir packages/web/components && cd packages/web/components && yarn init -y
 mkdir packages/web/utils && cd packages/web/utils && yarn init -y
 mkdir packages/config && cd packages/config && yarn init -y
 ```
 
-Edit all `package.json` and add `"version": "1.0.0"`.
+For the app:
+
+```shell
+mkdir packages/web/app && cd packages/web/app && yarn create vite .
+```
+
+Then select react-ts option.
+
+> Note: Edit all `package.json` and add `"version": "1.0.0"`.
 
 ## Add NX
 
@@ -100,6 +108,22 @@ Add the following configuration if the packages is for a `web` (front) env:
 module.exports = {
   extends: [require.resolve("@project/config/eslint/web")]
 };
+```
+
+Edit also the `vite.config.ts` in `packages/web/app` directory and the lines related to eslint:
+
+```diff
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
++ import eslint from "vite-plugin-eslint";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react(), 
++    eslint()
+  ]
+});
 ```
 
 ### Node
@@ -164,7 +188,7 @@ yarn add -D @commitlint/cli @commitlint/config-conventional
 echo "module.exports = {extends: ['@commitlint/config-angular']};" > commitlint.config.js
 ```
 
-## Add husky
+## Husky
 
 ```shell
 yarn dlx husky-init --yarn2 && yarn
@@ -225,3 +249,52 @@ And finally, edit the root `package.json` and add the following scripts:
   }
 }
 ```
+
+## Tailwind
+
+```shell
+yarn workspace @project/config add -D tailwindcss tailwindcss-cli postcss autoprefixer postcss-flexbugs-fixes postcss-preset-env postcss-nested
+```
+
+In `packages/config`:
+
+- Create [postcss.config.js](./packages/config/postcss.config.js),
+- Create [tailwind.config.js](./packages/config/tailwind.config.js).
+
+In `packages/web/app`, create a `postcss.config.js` file with the following content:
+
+```js
+module.exports = require("@project/config/postcss.config.js");
+```
+
+In `packages/web/app`, create a `tailwind.config.js` file with the following content:
+
+```js
+module.exports = require("@project/config/tailwind.config.js");
+```
+
+In `packages/web/components/styles/tailwind`, create an `index.css` file with the following content:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+In `packages/web/components/styles`, create an `index.css` file with the following content:
+
+```css
+@import "./tailwind/index.css";
+```
+
+Then, in `packages/web/components`, create an `index.ts` file with the following content:
+
+```typescript
+import "./styles/index.css";
+
+export * from "./components/button/Button";
+```
+
+Now, when a component is used in app or any other web package, the tailwind configuration will be loaded automatically.
+
+## Create server

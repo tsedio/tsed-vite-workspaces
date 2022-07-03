@@ -2,6 +2,7 @@
   "name": "@project/app",
   "private": true,
   "version": "1.0.0",
+  "main": "src/main.tsx",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
