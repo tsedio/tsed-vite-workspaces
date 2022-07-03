@@ -40,8 +40,9 @@ This repository show you how to create mono repository with Ts.ED and Vite/React
 - Eslint & Prettier
 - Lint-staged
 - Husky
+- Storybook and tailwind viewer
 
-### Step
+### Steps
 
 ```sh
 corepack enable
@@ -63,7 +64,6 @@ Edit `package.json` and add:
 
 ```sh
 mkdir packages/web/components && cd packages/web/components && yarn init -y
-mkdir packages/web/utils && cd packages/web/utils && yarn init -y
 mkdir packages/config && cd packages/config && yarn init -y
 ```
 
@@ -296,5 +296,181 @@ export * from "./components/button/Button";
 ```
 
 Now, when a component is used in app or any other web package, the tailwind configuration will be loaded automatically.
+
+## Storybook
+
+Create the new package with:
+
+```shell
+mkdir packages/web/storybook && cd packages/web/storybook && yarn init -y
+```
+
+Add version in the generated `package.json`:
+
+```json
+{
+  "name": "@project/storybook",
+  "version": "1.0.0"
+}
+```
+
+Run the following command under `packages/web/storybook`:
+
+```shell
+npx sb init --builder @storybook/builder-vite --type react
+yarn workspace @project/storybook add -D @storybook/addon-postcss
+```
+
+Edit `package.json` in `packages/web/storybook` and change the following lines:
+
+```diff
+{
+  "scripts": {
++    "start:storybook": "start-storybook -p 6006",
++    "build:storybook": "build-storybook -o dist"
+-    "storybook": "start-storybook -p 6006",
+-    "build-storybook": "build-storybook -o dist"
+  } 
+}
+```
+
+Edit the root `package.json` and add the following scripts:
+
+```json
+{
+  "scripts": {
+    "start:storybook": "nx start:storybook @project/storybook",
+    "build:storybook": "nx build:storybook @project/storybook"
+  }
+}
+```
+
+Edit `main.js` located in `packages/web/storybook/.storybook` and add the following code:
+
+```js
+const { map } = require('@project/config/packages/index.js');
+
+module.exports = {
+  "stories": [
+    ...map("web/components", [
+      "**/*.stories.mdx",
+      "**/*.stories.@(js|jsx|ts|tsx)"
+    ]),
+    ...map("web/app", [
+      "**/*.stories.mdx",
+      "**/*.stories.@(js|jsx|ts|tsx)"
+    ]),
+    "../stories/**/*.stories.mdx",
+    "../stories/**/*.stories.@(js|jsx|ts|tsx)"
+  ],
+  "addons": [
+    {
+      name: '@storybook/addon-postcss',
+      options: {
+        cssLoaderOptions: {
+          importLoaders: 1,
+        },
+        postcssLoaderOptions: {
+          // When using postCSS 8
+          implementation: require('postcss'),
+        },
+      },
+    }
+  ]
+}
+```
+
+Edit `preview.js` located in `packages/web/storybook/.storybook` and add the following code:
+
+```typescript
+import "@project/components";
+
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  }
+}
+```
+
+In `packages/web/storybook`, create a `postcss.config.js` file with the following content:
+
+```js
+module.exports = require("@project/config/postcss.config.js");
+```
+
+In `packages/web/storybook`, create a `tailwind.config.js` file with the following content:
+
+```js
+module.exports = require("@project/config/tailwind.config.js");
+```
+
+### Display tailwind configuration in storybook
+
+Run:
+
+```shell
+yarn workspace @project/config add -D tailwindcss-cli tailwind-config-viewer
+```
+
+Then add in `packages/config/package.json` the following scripts:
+
+```json
+{
+  "scripts": {
+    "start:tailwind": "tailwind-config-viewer -o",
+    "build:tailwind": "tailwind-config-viewer export ../web/storybook/public && cp ../web/storybook/public/index.html ../web/storybook/public/tailwind.html && yarn clean:tailwind",
+    "clean:tailwind": "rimraf ../web/storybook/public/index.html ../web/storybook/public/favicon.ico"
+  }
+}
+```
+
+Edit the root `package.json` and change the following scripts:
+
+```diff
+{
+  "scripts": {
+-    "start:storybook": "nx start:storybook @project/storybook",
+-    "build:storybook": "nx build:storybook @project/storybook",
++    "start:storybook": "nx build:tailwind @project/config && nx start:storybook @project/storybook",
++    "build:storybook": "nx build:tailwind @project/config && nx build:storybook @project/storybook",
+  }
+}
+```
+
+Edit `main.js` located in `packages/web/storybook/.storybook` and add the following code:
+
+```js
+module.exports = {
+  staticDirs: ["../public"]
+}
+```
+
+Finally, create a new story  `tailwind.stories.mdx` in `packages/web/storybook/stories` with the following code:
+
+```
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Tailwind"/>
+
+<style>{`
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Tailwind"/>
+
+<style>{`
+.sbdocs-wrapper {
+  padding: 0 !important;
+}
+.sbdocs .sbdocs-content {
+  max-width: 100%;
+}
+`}</style>
+
+<iframe src="./tailwind.html" style={{height: '100vh', width: '100vw'}}/>
+```
 
 ## Create server

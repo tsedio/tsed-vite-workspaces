@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "start:web:app": "nx start @project/app",
+    "start:storybook": "nx build:tailwind @project/config && nx start:storybook @project/storybook",
+    "build:web:app": "nx build @project/app",
+    "build:tailwind": "nx build:tailwind && ",
+    "build:storybook": "nx build:tailwind @project/config && nx build:storybook @project/storybook",
     "prepare": "is-ci || husky install",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "nx run-many --target=lint --all",
