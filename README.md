@@ -42,7 +42,8 @@ This repository show you how to create mono repository with Ts.ED and Vite/React
 - Husky
 - Storybook and tailwind viewer
 
-### Steps
+# Steps
+## Prepare workspaces
 
 ```sh
 corepack enable
@@ -77,7 +78,7 @@ Then select react-ts option.
 
 > Note: Edit all `package.json` and add `"version": "1.0.0"`.
 
-## Add NX
+Then install NX:
 
 ```sh
 npx add-nx-to-monorepo
@@ -413,7 +414,7 @@ module.exports = require("@project/config/tailwind.config.js");
 Run:
 
 ```shell
-yarn workspace @project/config add -D tailwindcss-cli tailwind-config-viewer
+yarn workspace @project/config add -D tailwindcss-cli tailwind-config-viewer rimraf
 ```
 
 Then add in `packages/config/package.json` the following scripts:
