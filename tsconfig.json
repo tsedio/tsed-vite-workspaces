@@ -6,6 +6,21 @@
     },
     {
       "path": "./packages/web/components"
+    },
+    {
+      "path": "./packages/back/domain"
+    },
+    {
+      "path": "./packages/back/infra"
+    },
+    {
+      "path": "./packages/back/usecases"
+    },
+    {
+      "path": "./packages/back/api"
+    },
+    {
+      "path": "./packages/back/server"
     }
   ]
 }

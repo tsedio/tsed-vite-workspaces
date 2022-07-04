@@ -3,16 +3,19 @@
   "packageManager": "yarn@3.2.1",
   "private": true,
   "scripts": {
+    "clean": "nx run-many --target=clean --all",
     "start:web:app": "nx start @project/app",
     "start:storybook": "nx build:tailwind @project/config && nx start:storybook @project/storybook",
-    "build:web:app": "nx build @project/app",
+    "start:back:server": "nx start @project/server",
     "build:tailwind": "nx build:tailwind && ",
     "build:storybook": "nx build:tailwind @project/config && nx build:storybook @project/storybook",
-    "prepare": "is-ci || husky install",
+    "build:barrels": "nx run-many --target=barrels --all",
+    "build": "nx run-many --target=build --all",
     "lint": "nx run-many --target=lint --all",
-    "lint:fix": "nx run-many --target=lint --all",
+    "lint:fix": "nx run-many --target=lint:fix --all",
     "test": "nx run-many --target=test --all",
-    "prettier": "prettier --write \"**/*.{md,yml,json}\""
+    "prettier": "prettier --write \"**/*.{md,yml,json}\"",
+    "prepare": "is-ci || husky install"
   },
   "dependencies": {
     "cross-env": "^7.0.3",
@@ -30,12 +33,14 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
     "@types/jest": "^28.1.4",
+    "esbuild-jest": "^0.5.0",
     "eslint": "^8.19.0",
     "husky": "^8.0.0",
     "jest": "^28.1.2",
     "jest-environment-jsdom": "^28.1.2",
     "jest-watch-typeahead": "^1.1.0",
     "lint-staged": "^13.0.3",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "workspaces": [

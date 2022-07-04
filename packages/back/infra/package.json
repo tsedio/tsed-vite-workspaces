@@ -1,0 +1,24 @@
+{
+  "name": "@project/infra",
+  "version": "1.0.0",
+  "description": "",
+  "source": "./src/index.ts",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    "default": "./dist/index.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "yarn run barrels && tsc --build",
+    "barrels": "barrelsby --config .barrelsby.json",
+    "test": "yarn run lint && yarn run test:coverage",
+    "test:unit": "cross-env NODE_ENV=test jest",
+    "test:coverage": "yarn run test:unit",
+    "lint": "eslint '**/*.{ts,js}'",
+    "lint:fix": "eslint '**/*.{ts,js}' --fix"
+  },
+  "dependencies": {
+    "@project/domain": "1.0.0"
+  }
+}

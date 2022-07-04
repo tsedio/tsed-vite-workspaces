@@ -1,0 +1,24 @@
+{
+  "name": "@project/domain",
+  "version": "1.0.0",
+  "description": "",
+  "source": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "yarn run barrels && tsc --build",
+    "barrels": "barrelsby --config .barrelsby.json",
+    "test": "yarn run lint && yarn run test:coverage",
+    "test:unit": "cross-env NODE_ENV=test jest",
+    "test:coverage": "yarn run test:unit",
+    "lint": "eslint '**/*.{ts,js}'",
+    "lint:fix": "eslint '**/*.{ts,js}' --fix"
+  },
+  "peerDependencies": {
+    "@tsed/common": "^6.116.1",
+    "@tsed/core": "^6.116.1",
+    "@tsed/di": "^6.116.1",
+    "@tsed/schema": "^6.116.1"
+  }
+}

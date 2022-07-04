@@ -54,3 +54,5 @@ node_modules
 # Documentation here: https://yarnpkg.com/features/zero-installs
 !.yarn/cache
 #.pnp.*
+tsconfig.compile.tsbuildinfo
+tsconfig.tsbuildinfo

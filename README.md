@@ -25,7 +25,13 @@
 
 ## Introduction
 
-This repository show you how to create mono repository with Ts.ED and Vite/React.
+This repository show you how to create mono repository with Ts.ED and Vite/React. It tries to show step by step, how to install
+the different techno to obtain an integrated build chain.
+
+The technologies presented are switchable. If you want to make an application on Vue/Svelte, it's possible because Vite support it.
+You can also change Ts.ED to another backend framework. 
+
+The idea is essentially to see how the mono repository is structured to put a front and back and tools like storybook!
 
 ## Features
 
@@ -81,7 +87,7 @@ Then select react-ts option.
 Then install NX:
 
 ```sh
-npx add-nx-to-monorepo
+yarn dlx add-nx-to-monorepo
 ```
 
 ## Eslint & prettier
@@ -96,8 +102,8 @@ yarn workspace add -D eslint-plugin-jsx-a11y
 
 In `packages/config/eslint`:
 
-- Create a [`packages/config/eslint/node.js`](./packages/config/eslint/node.js) file,
-- Create a [`packages/config/eslint/web.js`](./packages/config/eslint/web.js) file.
+- Create a `packages/config/eslint/node.js` file from [this example](./packages/config/eslint/node.js),
+- Create a `packages/config/eslint/web.js` file from [this example](./packages/config/eslint/web.js).
 
 Then create `.eslintrc.js` for each packages in `packages/config`.
 
@@ -219,11 +225,11 @@ yarn workspace @project/config add -D camelcase
 
 In `packages/config/jest`, create the following files:
 
-- Create [`jest.web.config.js`](./packages/config/jest/jest.web.config.js),
-- Create [`cssTransform.js`](./packages/config/jest/cssTransform.js),
-- Create [`fileTransform.js`](./packages/config/jest/fileTransform.js),
-- Create [`setupTest.js`](./packages/config/jest/setupTest.js),
-- Create [`swc.json`](./packages/config/jest/swc.json).
+- Create `jest.web.config.js` file from [this example](./packages/config/jest/jest.web.config.js),
+- Create `cssTransform.js` file from [this example](./packages/config/jest/cssTransform.js),
+- Create `fileTransform.js` file from [this example](./packages/config/jest/fileTransform.js),
+- Create `setupTest.js` file from [this example](./packages/config/jest/setupTest.js),
+- Create `swc.web.json` file from [this example](./packages/config/jest/swc.web.json).
 
 In `packages/web/app` and `packages/web/components`, create a `jest.config.js` with the following code:
 
@@ -259,8 +265,8 @@ yarn workspace @project/config add -D tailwindcss tailwindcss-cli postcss autopr
 
 In `packages/config`:
 
-- Create [postcss.config.js](./packages/config/postcss.config.js),
-- Create [tailwind.config.js](./packages/config/tailwind.config.js).
+- Create `postcss.config.js` file from [this example](./packages/config/postcss.config.js),
+- Create `tailwind.config.js` file from [this example](./packages/config/tailwind.config.js).
 
 In `packages/web/app`, create a `postcss.config.js` file with the following content:
 
@@ -318,7 +324,7 @@ Add version in the generated `package.json`:
 Run the following command under `packages/web/storybook`:
 
 ```shell
-npx sb init --builder @storybook/builder-vite --type react
+yarn dlx sb init --builder @storybook/builder-vite --type react
 yarn workspace @project/storybook add -D @storybook/addon-postcss
 ```
 
@@ -475,3 +481,184 @@ import { Meta } from '@storybook/addon-docs/blocks'
 ```
 
 ## Create server
+
+Run the following commands:
+
+```shell
+mkdir packages/back/server
+cd packages/back/server
+yarn dlx @tsed/cli init .
+```
+
+Select the following options:
+
+```shell
+? Choose the target platform: Express.js
+? Choose the architecture for your project: Ts.ED
+? Choose the convention file styling: Ts.ED
+? Check the features needed for your project Database, Swagger, Testing
+? Choose a ORM manager Mongoose
+? Choose unit framework Jest
+```
+
+Edit the `packages/back/server/package.json` and apply changes:
+
+```diff
+{
++ "name": "@project/server",
+  "scripts": {
++   "clean": "rimraf dist tsconfig.tsbuildinfo",  
+-   "build": "yarn run barrels && tsc --project tsconfig.compile.json",  
++   "build": "yarn run barrels && tsc --build",
+-   "test": "yarn run test:lint && yarn run test:coverage",
++   "test": "yarn run lint && yarn run test:coverage",
+    "test:unit": "cross-env NODE_ENV=test jest",
+    "test:coverage": "yarn run test:unit",
+-   "test:lint": "eslint '**/*.{ts,js}'",
+-   "test:lint:fix": "eslint '**/*.{ts,js}' --fix"
++   "lint": "eslint '**/*.{ts,js}'",
++   "lint:fix": "eslint '**/*.{ts,js}' --fix"
+  },
+  "devDependencies": {
+-   "@typescript-eslint/eslint-plugin": "^5.30.4",
+-   "@typescript-eslint/parser": "^5.30.4",
+-   "eslint-config-prettier": "^8.5.0",
+-   "eslint-plugin-prettier": "^4.2.1",
+-   "husky": "^8.0.1",
+-   "is-ci": "^3.0.1",
+-   "jest": "^28.1.2",
+  }
+}
+```
+
+Edit the root `package.json` and add the following scripts:
+
+```json
+{
+  "scripts": {
+    "clean": "nx run-many --target=clean --all",
+    "start:back:server": "nx start @project/server",
+    "build:barrels": "nx run-many --target=barrels --all",
+    "build": "nx run-many --target=build --all"
+  }
+}
+```
+
+### Configure TypeScript
+
+Edit the root `tsconfig.json` and add the following scripts:
+
+```json
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/web/app"
+    },
+    {
+      "path": "./packages/web/components"
+    },
+    {
+      "path": "./packages/back/server"
+    }
+  ]
+}
+
+```
+
+- Edit the [`packages/back/server/tsconfig.json`](./packages/server/tsconfig.json) file,
+
+### Eslint
+
+Create `.eslintrc.js` in `packages/back/server` with the following code: 
+
+```js
+module.exports = require("@project/config/eslint/node.js");
+```
+
+### Jest
+
+- Create a `packages/config/jest.node.config.json` file from [this example](./packages/config/jest.node.config.json),
+- Create `swc.web.json` file from [this example](./packages/config/jest/swc.web.json).
+
+Create a `packages/back/server/jest.config.json` with the following code:
+
+```typescript
+module.exports = require("@project/config/jest/jest.node.config.js");
+```
+
+### Add subpackages in back
+
+It's possible to use Yarn workspace to create backend package. This is an effective way to better organize your code. 
+However, adding a back package requires performing some steps.
+
+#### Create the new package
+
+Here we will create the `api` package which will contain all our Ts.ED Controllers
+
+```shell
+mkdir packages/back/api && cd packages/back/api && yarn init -y
+```
+
+Edit the `packages/back/api/package.json` and apply changes:
+
+```diff
+{
+- "name": "api"
++ "name": "@project/api"
++ "scripts": {
++   "clean": "rimraf dist tsconfig.tsbuildinfo",
++   "build": "yarn run barrels && tsc --build",
++   "barrels": "barrelsby --config .barrelsby.json",
++   "test": "yarn run lint && yarn run test:coverage",
++   "test:unit": "cross-env NODE_ENV=test jest",
++   "test:coverage": "yarn run test:unit",
++   "lint": "eslint '**/*.{ts,js}'",
++   "lint:fix": "eslint '**/*.{ts,js}' --fix"
++ }
+}
+```
+
+- Create `.barrelsby.json` file from [this example](./packages/back/domain/.barrelsby.json)
+- Create `.eslintrc.js` file from [this example](./packages/back/domain/.eslintrc.js)
+- Create `.jest.config.js` file from [this example](./packages/back/domain/jest.config.js)
+- Create `tsconfig.json` file from [this example](./packages/back/domain/tsconfig.json)
+
+### Add references
+
+Edit the root `tsconfig.json` and add the following references:
+
+```json
+{
+  "references": [
+    {
+      "path": "./packages/back/api"
+    }
+  ]
+}
+```
+
+To link the `server` package to the new `api` package, you have to edit the  `packages/back/server/tsconfig.json` and
+add also a reference:
+
+```json
+{
+  "references": [
+    {
+      "path": "../api"
+    }
+  ]
+}
+```
+
+And to preserve the build order when you'll run the `yarn build` command, you have to add the `api` package dependency to the `server` package:
+
+```json
+{
+  "dependencies": {
+    "@project/api": "1.0.0"
+  }
+}
+```
+
+Finally, run `yarn install` to create link between packages!

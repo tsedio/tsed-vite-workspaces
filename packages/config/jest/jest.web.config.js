@@ -7,7 +7,7 @@ module.exports = {
   testEnvironment: "jsdom",
   setupFilesAfterEnv: [require.resolve("./setupTest.js")],
   transform: {
-    "^.+\\.(t|j)sx?$": ["@swc/jest", require("./swc.json")],
+    "^.+\\.(t|j)sx?$": ["@swc/jest", require("./swc.web.json")],
     "^.+\\.css$": require.resolve("./cssTransform.js"),
     "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": require.resolve("./fileTransform.js")
   },
