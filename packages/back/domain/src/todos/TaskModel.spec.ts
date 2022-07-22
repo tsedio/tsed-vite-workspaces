@@ -10,21 +10,6 @@ describe("TaskModel", () => {
   it("generate the expected schema", () => {
     const schema = getJsonSchema(TaskModel);
 
-    expect(schema).toEqual({
-      properties: {
-        done: {
-          default: false,
-          type: "boolean"
-        },
-        title: {
-          examples: ["My task title"],
-          maxLength: 200,
-          minLength: 3,
-          type: "string"
-        }
-      },
-      required: ["title", "done"],
-      type: "object"
-    });
+    expect(schema).toMatchSnapshot();
   });
 });

@@ -9,13 +9,13 @@
     "default": "./lib/index.js"
   },
   "scripts": {
-    "clean": "rimraf dist tsconfig.tsbuildinfo",
-    "build": "yarn run barrels && tsc --project tsconfig.json",
-    "barrels": "barrelsby --config .barrelsby.json",
-    "test": "yarn run lint && yarn run test:coverage",
-    "test:unit": "cross-env NODE_ENV=test jest --passWithNoTests",
-    "test:coverage": "yarn run test:unit",
-    "lint": "eslint '**/*.{ts,js}'",
-    "lint:fix": "eslint '**/*.{ts,js}' --fix"
+    "/clean": "rimraf dist tsconfig.tsbuildinfo",
+    "/build": "yarn run barrels && tsc --project tsconfig.json",
+    "/barrels": "barrelsby --config .barrelsby.json",
+    "/test": "yarn run lint && yarn run test:coverage",
+    "/test:unit": "cross-env NODE_ENV=test jest --passWithNoTests",
+    "/test:coverage": "yarn run test:unit",
+    "/lint": "eslint '**/*.{ts,js}'",
+    "/lint:fix": "eslint '**/*.{ts,js}' --fix"
   }
 }

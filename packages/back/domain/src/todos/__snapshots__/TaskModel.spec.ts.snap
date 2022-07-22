@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskModel generate the expected schema 1`] = `
+Object {
+  "properties": Object {
+    "done": Object {
+      "default": false,
+      "type": "boolean",
+    },
+    "title": Object {
+      "examples": Array [
+        "My task title",
+      ],
+      "maxLength": 200,
+      "minLength": 3,
+      "type": "string",
+    },
+  },
+  "required": Array [
+    "title",
+    "done",
+  ],
+  "type": "object",
+}
+`;

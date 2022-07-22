@@ -1,6 +1,7 @@
 import { PlatformTest } from "@tsed/common";
 import { PlatformExpress } from "@tsed/platform-express";
 import { TestMongooseContext } from "@tsed/testing-mongoose";
+import { readJsonSync } from "fs-extra";
 import SuperTest, { SuperTest as Request, Test } from "supertest";
 
 import { Server } from "./Server";
@@ -28,6 +29,8 @@ describe("Server", () => {
   it("should call GET /rest/version", async () => {
     const response = await request.get("/rest/version").expect(200);
 
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({
+      version: readJsonSync("./package.json").version
+    });
   });
 });

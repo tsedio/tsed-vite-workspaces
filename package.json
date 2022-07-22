@@ -12,18 +12,18 @@
     "build:storybook": "nx build:tailwind @project/config && nx build:storybook @project/storybook",
     "build:barrels": "nx run-many --target=barrels --all",
     "build:back:server": "nx build @project/server",
-    "build:http:client": "nx build:http:client @project/server && nx barrels @project/http-client",
+    "build:http:client": "yarn build:back:server && nx build:http:client @project/server && yarn run build:barrels",
     "build": "nx run-many --target=build --all",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "nx run-many --target=lint:fix --all",
     "test": "nx run-many --target=test --all",
     "prettier": "prettier --write \"**/*.{md,yml,json}\"",
     "prepare": "is-ci || husky install",
-    "release": "semantic-release",
-    "postinstall": "yarn build:http:client"
+    "release": "semantic-release"
   },
   "dependencies": {
     "@tsed/monorepo-utils": "^1.21.0",
+    "barrelsby": "^2.3.4",
     "cross-env": "^7.0.3",
     "is-ci": "^3.0.1",
     "lerna": "5.1.8",

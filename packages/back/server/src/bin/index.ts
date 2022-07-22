@@ -7,6 +7,7 @@ import { Server } from "../Server";
 
 CliCore.bootstrap({
   ...config,
+  mongoose: [],
   server: Server,
   // add your custom commands here
   commands: [GenerateHttpClientCmd],

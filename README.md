@@ -548,6 +548,13 @@ Edit the root `package.json` and add the following scripts:
 }
 ```
 
+And run the following command:
+
+
+```shell
+yarn add barrelsby
+```
+
 ### Configure TypeScript
 
 Edit the root `tsconfig.json` and add the following scripts:
@@ -673,6 +680,7 @@ Add the Ts.ED plugin `@tsed/cli-core` to use custom commands:
 
 ```shell
 yarn workspace @project/server add @tsed/cli-core @tsed/cli swagger-typescript-api @tsed/cli-generate-http-client
+yarn workspace @project/server add -D @types/inquirer @types/fs-extra
 ```
 
 Then add `packages/back/server/bin/index.ts` file and add the following code:
@@ -735,7 +743,7 @@ Then add the following scripts to the root package.json:
 ```json
 {
   "scripts": {
-    "build:http:client": "nx build:http:client @project/server && nx barrels @project/http-client",
+    "build:http:client": "yarn build:back:server && nx build:http:client @project/server && yarn run build:barrels",
     "postinstall": "yarn build:http:client"
   }
 }
@@ -786,7 +794,8 @@ function useVersion() {
 
 Here we use the http client generated previously to consume data from our API. 
 
-Here is the complete App.tsx code:
+Here is the complete `App.tsx` code:
+
 ```tsx
 import "./App.css";
 
