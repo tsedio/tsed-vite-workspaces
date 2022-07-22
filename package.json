@@ -3,6 +3,7 @@
   "packageManager": "yarn@3.2.1",
   "private": true,
   "scripts": {
+    "configure": "monorepo ci configure",
     "clean": "nx run-many --target=clean --all",
     "start:web:app": "nx start @project/app",
     "start:storybook": "nx build:tailwind @project/config && nx start:storybook @project/storybook",
@@ -18,11 +19,14 @@
     "test": "nx run-many --target=test --all",
     "prettier": "prettier --write \"**/*.{md,yml,json}\"",
     "prepare": "is-ci || husky install",
+    "release": "semantic-release",
     "postinstall": "yarn build:http:client"
   },
   "dependencies": {
+    "@tsed/monorepo-utils": "^1.21.0",
     "cross-env": "^7.0.3",
     "is-ci": "^3.0.1",
+    "lerna": "5.1.8",
     "nx": "^14.4.0"
   },
   "devDependencies": {
@@ -58,5 +62,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "monorepo": {
+    "productionBranch": "master",
+    "developBranch": "master",
+    "npmAccess": "public"
   }
 }

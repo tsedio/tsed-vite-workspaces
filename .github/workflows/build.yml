@@ -46,6 +46,35 @@ jobs:
       - name: Run test
         run: yarn test
 
+  deploy-packages:
+    runs-on: ubuntu-latest
+    needs: [ lint, test ]
+    if: github.event_name != 'pull_request' && contains('
+      refs/heads/production
+      refs/heads/alpha
+      refs/heads/beta
+      refs/heads/rc
+      ', github.ref)
+
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Release packages
+        env:
+          CI: true
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn release
+
   storybook:
     runs-on: ubuntu-latest
     needs: [ lint, test ]

@@ -842,3 +842,67 @@ function App() {
 
 export default App;
 ```
+
+## Publish packages
+
+> Unfortunately, I haven't found a good alternative for the `lerna version`. So, we need to install lerna to maintain and update packages version.
+
+Install the following modules:
+
+```shell
+yarn add lerna @tsed/monorepo-utils semantic-release 
+```
+
+Then add the following lines in the root `package.json`:
+
+```json
+{
+  "scripts": {
+    "configure": "monorepo ci configure",
+    "release": "semantic-release"
+  },
+  "monorepo": {
+    "productionBranch": "master",
+    "developBranch": "master",
+    "npmAccess": "public"
+  }
+}
+```
+
+- Create a [`release.config.json`](./release.config.json) file from this [example](./release.config.json),
+- Create a [`lerna.json`](./lerna.json) file from this [example](./lerna.json).
+
+That all! `release` command will bump version, apply Git tag, publish all packages on NPM and push a release note on Github releases.
+
+If you use Github Actions you can use the `release` command as following:
+
+```yml
+  deploy-packages:
+    runs-on: ubuntu-latest
+    needs: [ lint, test ]
+    if: github.event_name != 'pull_request' && contains('
+      refs/heads/production
+      refs/heads/alpha
+      refs/heads/beta
+      refs/heads/rc
+      ', github.ref)
+
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Release packages
+        env:
+          CI: true
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn release
+```
