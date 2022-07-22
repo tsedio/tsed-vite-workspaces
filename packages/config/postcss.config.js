@@ -7,10 +7,10 @@ module.exports = {
       },
       stage: 3
     },
+    "tailwindcss/nesting": {},
     tailwindcss: {
       config: require("./tailwind.config.js")
     },
-    "postcss-nested": {},
     autoprefixer: {}
   }
 };
