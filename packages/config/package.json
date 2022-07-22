@@ -5,7 +5,7 @@
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "yarn lint --fix",
     "start:tailwind": "tailwind-config-viewer -o",
-    "build:tailwind": "tailwind-config-viewer export ../web/storybook/public && cp ../web/storybook/public/index.html ../web/storybook/public/tailwind.html && yarn clean:tailwind",
+    "build:tailwind": "tailwind-config-viewer export ../../web/storybook/public && cp ../web/storybook/public/index.html ../web/storybook/public/tailwind.html && yarn clean:tailwind",
     "clean:tailwind": "rimraf ../web/storybook/public/index.html ../web/storybook/public/favicon.ico"
   },
   "devDependencies": {

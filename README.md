@@ -51,12 +51,16 @@ The idea is essentially to see how the mono repository is structured to put a fr
 # Steps
 ## Prepare workspaces
 
+To begin we need to configure yarn:
+
 ```sh
 corepack enable
 yarn init -2
 ```
 
-Add `nodeLinker: node-modules` in `.yarnrc.yml`.
+Add `nodeLinker: node-modules` in `.yarnrc.yml`. 
+
+> Note: PNP support is not covered at this step.
 
 Edit `package.json` and add:
 
@@ -537,7 +541,7 @@ Edit the root `package.json` and add the following scripts:
 {
   "scripts": {
     "clean": "nx run-many --target=clean --all",
-    "start:back:server": "nx start @project/server",
+    "start:back:server": "nx build @project/server",
     "build:barrels": "nx run-many --target=barrels --all",
     "build": "nx run-many --target=build --all"
   }
@@ -662,3 +666,179 @@ And to preserve the build order when you'll run the `yarn build` command, you ha
 ```
 
 Finally, run `yarn install` to create link between packages!
+
+## Generate HttpClient from Ts.ED
+
+Add the Ts.ED plugin `@tsed/cli-core` to use custom commands:
+
+```shell
+yarn workspace @project/server add @tsed/cli-core @tsed/cli swagger-typescript-api @tsed/cli-generate-http-client
+```
+
+Then add `packages/back/server/bin/index.ts` file and add the following code:
+
+```typescript
+#!/usr/bin/env node
+import { CliCore } from "@tsed/cli-core";
+import { GenerateHttpClientCmd } from "@tsed/cli-generate-http-client";
+
+import { config } from "../config";
+import { Server } from "../Server";
+
+CliCore.bootstrap({
+  ...config,
+  server: Server,
+  // add your custom commands here
+  commands: [GenerateHttpClientCmd],
+  httpClient: {
+    transformOperationId(operationId: string) {
+      return operationId.replace(/Controller/g, "");
+    }
+  }
+}).catch(console.error);
+```
+
+Edit also the `packages/back/server/package.json` and add the following script:
+
+```json
+{
+  "scripts": {
+    "build:http:client": "tsed run generate-http-client --output ../../web/http-client/src/__generated__"
+  }
+}
+```
+
+The following script will generate the HttpClient in the `packages/web/http-client`. 
+
+Add a `package.json` in `packages/web/http-client` with the following content:
+
+```json
+{
+  "name": "@project/http-client",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "yarn run barrels",
+    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "yarn lint --fix",
+    "test": "cross-env NODE_ENV=test jest --coverage",
+    "barrels": "barrelsby --config .barrelsby.json"
+  },
+  "devDependencies": {
+    "@project/server": "1.0.0"
+  }
+}
+```
+
+Then add the following scripts to the root package.json:
+
+```json
+{
+  "scripts": {
+    "build:http:client": "nx build:http:client @project/server && nx barrels @project/http-client",
+    "postinstall": "yarn build:http:client"
+  }
+}
+```
+
+Run `yarn build:http:client` to generate the client!
+
+## Configure proxy
+
+Update the `packages/web/app/vite.config.ts` to allow communication between the front and backend via the proxy options:
+
+```typescript
+export default defineConfig({
+  plugins: [react(), eslint()],
+  server: {
+    proxy: {
+      "/rest": "http://localhost:8083"
+    }
+  }
+});
+```
+
+## Get the server version and display it in the web app
+
+We need to create a hook to call our backend. Here is the useVersion hook:
+
+```tsx
+import "./App.css";
+
+import { Button } from "@project/components";
+import { httpClient, VersionInfoModel } from "@project/http-client";
+import { useEffect, useState } from "react";
+
+import logo from "./logo.svg";
+
+function useVersion() {
+  const [versionInfo, setVersionInfo] = useState<VersionInfoModel>({} as any);
+
+  useEffect(() => {
+    httpClient.version.get().then((versionInfo: VersionInfoModel) => {
+      setVersionInfo(versionInfo);
+    });
+  }, [setVersionInfo]);
+
+  return { versionInfo };
+}
+```
+
+Here we use the http client generated previously to consume data from our API. 
+
+Here is the complete App.tsx code:
+```tsx
+import "./App.css";
+
+import { Button } from "@project/components";
+import { httpClient, VersionInfoModel } from "@project/http-client";
+import { useEffect, useState } from "react";
+
+import logo from "./logo.svg";
+
+function useVersion() {
+  const [versionInfo, setVersionInfo] = useState<VersionInfoModel>({} as any);
+
+  useEffect(() => {
+    httpClient.version.get().then((versionInfo: VersionInfoModel) => {
+      setVersionInfo(versionInfo);
+    });
+  }, [setVersionInfo]);
+
+  return { versionInfo };
+}
+
+function App() {
+  const [count, setCount] = useState(0);
+  const { versionInfo } = useVersion();
+
+  return (
+    <div className="text-center">
+      <header className="bg-gray-800 min-h-screen flex items-center justify-center app-header text-white flex-col">
+        <img src={logo} className="app-logo" alt="logo" />
+        <p>Hello Ts.ED + Vite + React!</p>
+
+        <p>Version: {versionInfo.version}</p>
+
+        <p>
+          <Button onClick={() => setCount((count) => count + 1)}>count is: {count}</Button>
+        </p>
+        <p>
+          Edit <code>App.tsx</code> and save to test HMR updates.
+        </p>
+        <p>
+          <a className="app-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
+            Learn React
+          </a>
+          {" | "}
+          <a className="app-link" href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener noreferrer">
+            Vite Docs
+          </a>
+        </p>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```

@@ -16,9 +16,9 @@
     "lint:fix": "eslint '**/*.{ts,js}' --fix"
   },
   "peerDependencies": {
-    "@tsed/common": "^6.116.1",
-    "@tsed/core": "^6.116.1",
-    "@tsed/di": "^6.116.1",
-    "@tsed/schema": "^6.116.1"
+    "@tsed/common": "^6.119.0",
+    "@tsed/core": "^6.119.0",
+    "@tsed/di": "^6.119.0",
+    "@tsed/schema": "^6.119.0"
   }
 }

@@ -1,0 +1,12 @@
+{
+  "extends": "@project/config/tsconfig.web.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

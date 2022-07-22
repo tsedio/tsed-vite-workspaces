@@ -1,0 +1,14 @@
+{
+  "name": "@project/http-client",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "yarn run barrels",
+    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "yarn lint --fix",
+    "barrels": "barrelsby --config .barrelsby.json"
+  },
+  "devDependencies": {
+    "@project/server": "1.0.0"
+  }
+}

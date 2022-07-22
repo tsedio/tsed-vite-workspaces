@@ -10,12 +10,15 @@
     "build:tailwind": "nx build:tailwind && ",
     "build:storybook": "nx build:tailwind @project/config && nx build:storybook @project/storybook",
     "build:barrels": "nx run-many --target=barrels --all",
+    "build:back:server": "nx build @project/server",
+    "build:http:client": "nx build:http:client @project/server && nx barrels @project/http-client",
     "build": "nx run-many --target=build --all",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "nx run-many --target=lint:fix --all",
     "test": "nx run-many --target=test --all",
     "prettier": "prettier --write \"**/*.{md,yml,json}\"",
-    "prepare": "is-ci || husky install"
+    "prepare": "is-ci || husky install",
+    "postinstall": "yarn build:http:client"
   },
   "dependencies": {
     "cross-env": "^7.0.3",

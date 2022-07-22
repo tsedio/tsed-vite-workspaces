@@ -3,3 +3,4 @@
  */
 
 export * from "./todos/TodosController";
+export * from "./version/VersionController";
