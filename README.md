@@ -99,6 +99,7 @@ yarn dlx add-nx-to-monorepo
 ```shell
 yarn workspace @project/config add -D eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-workspaces eslint-config-prettier eslint-plugin-import eslint-plugin-simple-import-sort
 yarn workspace @project/config add -D eslint-config-react-app eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-testing-library eslint-plugin-jsx-a11y
+yarn workspace @project/config add -D vite-plugin-eslint
 ```
 
 In `packages/config/eslint`:
