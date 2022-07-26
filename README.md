@@ -39,14 +39,14 @@ The idea is essentially to see how the mono repository is structured to put a fr
 - TypeScript
 - Ts.ED
 - React
-- Tailwind 3
+- Tailwind CSS 3
 - Vite
 - Nx and Yarn 3 workspaces
 - Jest 28+
 - Eslint & Prettier
 - Lint-staged
 - Husky
-- Storybook and tailwind viewer
+- Storybook and tailwind css viewer
 
 # Steps
 ## Prepare workspaces
@@ -261,7 +261,7 @@ And finally, edit the root `package.json` and add the following scripts:
 }
 ```
 
-## Tailwind
+## Tailwind CSS
 
 ```shell
 yarn workspace @project/config add -D tailwindcss tailwindcss-cli postcss autoprefixer postcss-flexbugs-fixes postcss-preset-env postcss-nested
