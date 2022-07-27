@@ -78,6 +78,15 @@ mkdir packages/web/components && cd packages/web/components && yarn init -y
 mkdir packages/config && cd packages/config && yarn init -y
 ```
 
+Edit the `packages/web/components` and add the following line:
+```json
+{
+  "main": "src/index.ts",
+}
+```
+
+> This line is necessary for other packages that consumes the right entrypoint from `@project/components`.
+
 For the app:
 
 ```shell
