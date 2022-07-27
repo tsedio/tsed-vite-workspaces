@@ -94,6 +94,118 @@ Then install NX:
 yarn dlx add-nx-to-monorepo
 ```
 
+
+### Configure TypeScript
+
+Create the root `tsconfig.json` and add the following scripts:
+
+```json
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/web/app"
+    },
+    {
+      "path": "./packages/web/components"
+    }
+  ]
+}
+```
+
+Add a `tsconfig.web.json` in `packages/config` with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  }
+}
+```
+
+Add a `tsconfig.node.json` in `packages/config` with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "newLine": "LF",
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "composite": true,
+    "lib": [
+      "es7",
+      "dom",
+      "ESNext.AsyncIterable"
+    ]
+  }
+}
+```
+
+Finally for each front-end package you'll need to create a `tsconfig.json` and `tsconfig.node.json` with the following content:
+
+**tsconfig.json**:
+```json
+{
+  "extends": "@project/config/tsconfig.web.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
+```
+
+**tsconfig.node.json**:
+```json
+{
+  "extends": "@project/config/tsconfig.web.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
+```
+
 ## Eslint & prettier
 
 ```shell
