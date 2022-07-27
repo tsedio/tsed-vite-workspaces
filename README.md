@@ -670,7 +670,7 @@ Edit the root `package.json` and add the following scripts:
 {
   "scripts": {
     "clean": "nx run-many --target=clean --all",
-    "start:back:server": "nx build @project/server",
+    "start:back:server": "nx start @project/server",
     "build:barrels": "nx run-many --target=barrels --all",
     "build": "nx run-many --target=build --all"
   }
@@ -706,7 +706,7 @@ Edit the root `tsconfig.json` and add the following scripts:
 
 ```
 
-- Edit the [`packages/back/server/tsconfig.json`](./packages/server/tsconfig.json) file,
+- Edit the [`packages/back/server/tsconfig.json`](./packages/back/server/tsconfig.json) file,
 
 ### Eslint
 
